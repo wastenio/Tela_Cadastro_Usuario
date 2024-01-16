@@ -2,6 +2,8 @@ import React from 'react';
 import logo from '../../assets/logo-dio.png';
 import { Button } from '../Button';
 
+import { IHeader } from './types';
+
 import {
     BuscarInputContainer,
     Container,
@@ -13,7 +15,8 @@ import {
     Wrapper
 } from './styles';
 
-const Header = ({autenticado}) => {
+
+const Header = ({autenticado}: IHeader) => {
   return (
     <Wrapper>
       <Container>

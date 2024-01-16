@@ -9,39 +9,41 @@ import { Header } from '../../components/Header';
 import { Input } from '../../components/Input';
 import { api } from '../../services/api';
 import { Column, Container, Criartext, EsqueciText, Row, SubtitleLogin, Title, TitleLogin, Wrapper } from './styles';
+import { IFormData } from './types';
 
 const schema = yup
   .object({
-    email: yup.string().email('email não é valido').required('Campo obrigatório'),
-    password: yup.string().min(3, 'No minimo 3 caracteres').required('Campo obrigatório'),
+    email: yup
+        .string()
+        .email('email não é valido')
+        .required('Campo obrigatório'),
+    password: yup
+        .string()
+        .min(3, 'No minimo 3 caracteres')
+        .required('Campo obrigatório'),
   })
   .required()
 
 const Login = () => {
-
     const navigate = useNavigate();
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const {control, handleSubmit, formState: { errors } } = useForm<IFormData>({
         resolver: yupResolver(schema),
         mode: 'onChange',
     });
 
-    const onSubmit = async (formData) => {
+    const onSubmit = async (formData: IFormData) => {
         try{
-            const {data} = await api.get(`/users?email=${formData.email}&senha=${formData.senha}`);
-            
-            if(data.length && data[0].id){
-                navigate('/feed') 
-                return
+            const { data } = await api.get(`/users?email=${formData.email}&senha=${formData.password}`);
+            if(data.length === 1){
+                navigate('/feed')
+            } else {
+                alert("Email ou senha inválido");
             }
-
-        }catch(e){
-            //TODO: HOUVE UM ERRO
-            alert('Usuário ou senha inválido')
+        }catch{
+            alert('Houve um erro, tente novamente.');
         }
     };
-
-    console.log('errors', errors);
 
     return(<>
         <Header />
@@ -54,7 +56,7 @@ const Login = () => {
             </Column>
             <Column>
                 <Wrapper>
-                    <TitleLogin>Faça seu cadastro</TitleLogin>
+                    <TitleLogin>Faça seu login</TitleLogin>
                     <SubtitleLogin>Faça seu cadastro e make the change._</SubtitleLogin>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Input name="email" errorMessage={errors?.email?.message} control={control} placeholder="E-mail" leftIcon={<MdEmail />}/>

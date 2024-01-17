@@ -1,48 +1,57 @@
-import React from 'react';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useContext } from 'react';
 import logo from '../../assets/logo-dio.png';
 import { Button } from '../Button';
 
-import { IHeader } from './types';
-
 import {
-    BuscarInputContainer,
-    Container,
-    Input,
-    Menu,
-    MenuRight,
-    Row,
-    UserPicture,
-    Wrapper
+  BuscarInputContainer,
+  Container,
+  Input,
+  Menu,
+  MenuRight,
+  Row,
+  UserPicture,
+  Wrapper
 } from './styles';
+import { AuthContext } from '../../context/auth';
+import { Link } from 'react-router-dom';
 
 
-const Header = ({autenticado}: IHeader) => {
+const Header = () => {
+
+  const { user, handleSignOut } = useContext(AuthContext);
+
   return (
     <Wrapper>
       <Container>
         <Row>
-            <img src={ logo } alt="Logo da DIO" />
-            {autenticado ? (
-              <>
-                <BuscarInputContainer>
-                  <Input placeholder='Buscar...' />
-                </BuscarInputContainer>
-                <Menu>Live Code</Menu>
-                <Menu>Global</Menu>
-              </>
+          <Link to="/">
+            <img src={logo} alt="Logo da DIO" />
+          </Link>
+          {user.id ? (
+            <>
+              <BuscarInputContainer>
+                <Input placeholder='Buscar...' />
+              </BuscarInputContainer>
+              <Menu>Live Code</Menu>
+              <Menu>Global</Menu>
+            </>
 
-            ) : null}
+          ) : null}
         </Row>
         <Row>
-            {autenticado ? (
-              <UserPicture src="https://avatars.githubusercontent.com/u/124081837?s=96&v=4" />
-            ) : (
-              <>
-                <MenuRight href="#">Home</MenuRight>
-                <Button title="Entrar" />
-                <Button title="Cadastrar" />
-              </>
-            )}
+          {user.id ? (
+            <>
+              <UserPicture src="https://avatars.githubusercontent.com/u/124081837?s=96&v=4" />{ " "}
+              <a href="#" onClick={handleSignOut}>Sair</a>
+            </>
+          ) : (
+            <>
+              <MenuRight href="#">Home</MenuRight>
+              <Button title="Entrar" />
+              <Button title="Cadastrar" />
+            </>
+          )}
         </Row>
       </Container>
     </Wrapper>
